@@ -112,4 +112,18 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+  config :opentelemetry, :resource,
+    service: [
+      name: "stream_chat",
+      version: "1.0.0"
+    ]
+
+  config :opentelemetry, :processors,
+    otel_batch_processor: %{
+      exporter: {
+        :opentelemetry_exporter,
+        %{endpoints: ["https://api.axiom.co"],
+          headers: [{"Authorization", "Bearer #{System.get_env("AXIOM_API_TOKEN")}"},
+            {"X-Axiom-Dataset", "#{System.get_env("AXIOM_DATASET")}"}]}}
+    }
 end

@@ -19,7 +19,7 @@ defmodule StreamChat.MixProject do
   def application do
     [
       mod: {StreamChat.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :opentelemetry_exporter]
     ]
   end
 
@@ -53,7 +53,14 @@ defmodule StreamChat.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:faker, "~> 0.17", only: [:dev, :test]},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      # open telemetry deps
+      {:opentelemetry, "~> 1.5"},
+      {:opentelemetry_api, "~> 1.4"},
+      {:opentelemetry_exporter, "~> 1.8"},
+      {:opentelemetry_phoenix, "~> 1.1"},
+      {:opentelemetry_cowboy, "~> 0.2"},
+      {:opentelemetry_ecto, "~> 1.2"} # if using ecto
     ]
   end
 

@@ -22,6 +22,11 @@ defmodule StreamChat.Application do
       # {StreamChat.Worker, arg}
     ]
 
+    # Setup Open Telemetry instrumentation
+    :opentelemetry_cowboy.setup()
+    OpentelemetryPhoenix.setup(adapter: :cowboy2)
+    OpentelemetryEcto.setup([:stream_chat, :repo]) # if using ecto
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: StreamChat.Supervisor]

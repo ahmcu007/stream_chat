@@ -70,11 +70,16 @@ defmodule StreamChatWeb.ChatLive.Root do
   end
 
   def assign_active_room_messages(socket) do
-    messages = Chat.last_ten_messages_for(socket.assigns.room.id)
+    # Only attempt to load messages if the room exists
+    if socket.assigns[:room] do
+      messages = Chat.last_ten_messages_for(socket.assigns.room.id)
 
-    socket
-    |> stream(:messages, messages)
-    |> assign(:oldest_message_id, List.first(messages).id)
+      socket
+      |> stream(:messages, messages)
+      |> assign(:oldest_message_id, messages |> List.first() |> Map.get(:id))
+    else
+      socket
+    end
   end
 
   def assign_rooms(socket) do
@@ -94,7 +99,8 @@ defmodule StreamChatWeb.ChatLive.Root do
   end
 
   def assign_oldest_message_id(socket, message) do
-    assign(socket, :oldest_message_id, message.id)
+    # Only attempt to assign the oldest_message_id if message is not nil
+    assign(socket, :oldest_message_id, message && message.id)
   end
 
   def assign_is_editing_message(socket, is_editing \\ nil) do
